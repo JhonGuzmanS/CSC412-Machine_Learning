@@ -1,0 +1,40 @@
+import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
+
+import numpy as np
+
+# variables here
+df = pd.read_csv("data.csv", header=None)
+
+index = ["X1", "X2", "X3", "X4", "X5", "y"]
+attr = ["X1", "X2", "X3", "X4", "X5"]
+df.columns = index
+
+train_set, test_set = train_test_split(df, test_size=1000, random_state=42)
+
+housing = train_set.drop("y", axis=1)
+housing_labels = train_set["y"].copy()
+
+num_pipeline = Pipeline([
+ ('imputer', SimpleImputer(strategy="median")),
+ ('std_scaler', StandardScaler()),
+ ])
+
+num_attribs = list[df]
+full_pipeline = ColumnTransformer([
+ ("num", num_pipeline, num_attribs),
+ ])
+housing_prepared = full_pipeline.fit_transform(housing)
+
+lin_reg = LinearRegression()
+lin_reg.fit(housing_prepared, housing_labels)
+
+some_data = housing.iloc[:5]
+some_labels = housing_labels.iloc[:5]
+some_data_prepared = full_pipeline.transform(some_data)
+print("Predictions:", lin_reg.predict(some_data_prepared))
