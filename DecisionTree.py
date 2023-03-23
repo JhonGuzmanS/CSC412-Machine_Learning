@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 index = ["buying", "maint", "doors", "persons", "lug_boot", "safety", "y"]
 features_index = ["buying", "maint", "doors", "persons", "lug_boot", "safety"]
 df = pd.read_csv("car.txt", names=index)
+# using text file car.txt 
 
 df.replace("5more", '6', inplace=True)
 df.replace("more", '6', inplace=True)
